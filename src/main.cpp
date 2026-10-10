@@ -49,6 +49,24 @@ Bounds compute_bounds(const std::vector<Point3D>& points){
 Point3D box_dimension(const Bounds&  b){
     return { b.max.x - b.min.x, b.max.y - b.min.y, b.max.z - b.min.z};
 }
+// calculate the centroid
+Point3D compute_average(const std::vector<Point3D>& points){
+    if (points.empty())
+    {
+        throw std::invalid_argument("compute_bounds: no points provided");
+    }
+    const double total_points = static_cast<double>(points.size());
+    double sum_x = 0.0;
+    double sum_y = 0.0;
+    double sum_z = 0.0;
+    for(const Point3D& point: points){
+        sum_x += point.x;
+        sum_y += point.y;
+        sum_z += point.z;
+    }
+
+    return {sum_x/total_points, sum_y/total_points, sum_z/total_points};
+}
 
 int main() {
 
@@ -58,15 +76,20 @@ int main() {
             {6.7, 6.9, 50.0},
             {10.0, 5.0, 80.0}};
         points.push_back({1.0, 2.0, 3.0});
+        points.push_back({2.0, 3.0, 4.0});
         std::cout << "Number of points: " << points.size() << std::endl;
 
-        for (const Point3D &point : points)
+        for (const Point3D& point : points)
         {
             std::cout << "(" << point.x << ", " << point.y << ", " << point.z << ")" << std::endl;
         }
         Bounds b = compute_bounds(points); //calculates the min and max co-ordinates
         Point3D result = box_dimension(b); //total dimension
+        std::vector<Point3D> empty_points{};
+        Point3D centroid = compute_average(points);
         std::cout << "Box Dimensions: (" << result.x << ", " << result.y << ", " << result.z << ")" << std::endl;
+        std::cout << "Box Centroid: (" << centroid.x << ", " << centroid.y << ", " << centroid.z << ")" << std::endl;
+
         return 0;
     }
 
