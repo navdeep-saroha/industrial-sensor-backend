@@ -8,36 +8,40 @@ struct Point3D {
     double z;
 };
 
-double min_x(const std::vector<Point3D>& points){
-    if (points.empty()){
-        throw std::invalid_argument("min_x: no points provided");
-    }
-    double smallest = points[0].x;
+struct Bounds {
+    Point3D min;
+    Point3D max;
+};
 
-    for (const Point3D& point : points){
-        if (point.x < smallest) {
-            smallest = point.x;
-        }
+Bounds compute_bounds(const std::vector<Point3D>& points){
+    if(points.empty()){
+        throw std::invalid_argument("compute_bounds: no points provided");
     }
-
-    return smallest;
-}
-double max_x(const std::vector<Point3D> &points)
-{
-    if (points.empty()){
-        throw std::invalid_argument("max_x: no points provided");
-    }
-    double max = points[0].x;
-
+    Bounds b{points[0], points[0]};
     for (const Point3D &point : points)
     {
-        if (point.x > max)
+        if (point.x < b.min.x)
         {
-            max = point.x;
+            b.min.x = point.x;
+        }
+        if(point.x > b.max.x){
+            b.max.x = point.x;
+        }
+        if (point.y < b.min.y){
+            b.min.y = point.y;
+        }
+        if(point.y > b.max.y){
+            b.max.y = point.y;
+        }
+
+        if(point.z < b.min.z){
+            b.min.z = point.z;
+        }
+        if(point.z > b.max.z){
+            b.max.z = point.z;
         }
     }
-
-    return max;
+    return b;
 }
 
 int main() {
@@ -54,8 +58,8 @@ int main() {
         {
             std::cout << "(" << point.x << ", " << point.y << ", " << point.z << ")" << std::endl;
         }
-        std::cout << "Min x: " << min_x(points) << std::endl;
-        std::cout << "Max x: " << max_x(points) << std::endl;
+        Bounds b = compute_bounds(points);
+        std::cout << "Min: (" << b.min.x << ", " << b.min.y << ", " << b.min.z << ")" << std::endl;
         return 0;
     }
 
