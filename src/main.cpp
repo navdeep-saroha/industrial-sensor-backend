@@ -1,6 +1,8 @@
 #include <iostream>
 #include <vector>
 #include <stdexcept>
+#include <cmath>
+#include <limits>
 
 //struct for storing all three co-ordinates in single object
 struct Point3D {
@@ -13,6 +15,13 @@ struct Bounds {
     Point3D min;
     Point3D max;
 };
+//check point for invalid values
+bool is_valid_point(const Point3D& point){
+    return std::isfinite(point.x) &&
+           std::isfinite(point.y) &&
+           std::isfinite(point.z);
+}
+
 // calculates the min and max co-ordinates
 Bounds compute_bounds(const std::vector<Point3D>& points){
     if(points.empty()){
@@ -88,8 +97,16 @@ int main() {
         std::vector<Point3D> empty_points{};
         Point3D centroid = compute_average(points);
         std::cout << "Box Dimensions: (" << result.x << ", " << result.y << ", " << result.z << ")" << std::endl;
-        std::cout << "Box Centroid: (" << centroid.x << ", " << centroid.y << ", " << centroid.z << ")" << std::endl;
+        std::cout << "Centroid: (" << centroid.x << ", " << centroid.y << ", " << centroid.z << ")" << std::endl;
 
+
+        const double nan_value = std::numeric_limits<double>::quiet_NaN();
+        const double inf_value = std::numeric_limits<double>::infinity();
+        std::cout << std::boolalpha;
+        std::cout << "Normal point:   " << is_valid_point({1.0, 2.0, 3.0}) << std::endl;
+        std::cout << "NaN in y:       " << is_valid_point({1.0, nan_value, 3.0}) << std::endl;
+        std::cout << "Infinity in z:  " << is_valid_point({1.0, 2.0, inf_value}) << std::endl;
+        std::cout << "Negative point: " << is_valid_point({-5.0, -2.0, -1.0}) << std::endl;
         return 0;
     }
 
