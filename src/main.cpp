@@ -2,17 +2,18 @@
 #include <vector>
 #include <stdexcept>
 
+//struct for storing all three co-ordinates in single object
 struct Point3D {
     double x;
     double y;
     double z;
 };
-
+//struct that defines min and max co-ordinates
 struct Bounds {
     Point3D min;
     Point3D max;
 };
-
+// calculates the min and max co-ordinates
 Bounds compute_bounds(const std::vector<Point3D>& points){
     if(points.empty()){
         throw std::invalid_argument("compute_bounds: no points provided");
@@ -43,6 +44,11 @@ Bounds compute_bounds(const std::vector<Point3D>& points){
     }
     return b;
 }
+// calcualtes the total box dimension
+// doesn't work if bounds are manually input with min > max
+Point3D box_dimension(const Bounds&  b){
+    return { b.max.x - b.min.x, b.max.y - b.min.y, b.max.z - b.min.z};
+}
 
 int main() {
 
@@ -58,8 +64,9 @@ int main() {
         {
             std::cout << "(" << point.x << ", " << point.y << ", " << point.z << ")" << std::endl;
         }
-        Bounds b = compute_bounds(points);
-        std::cout << "Min: (" << b.min.x << ", " << b.min.y << ", " << b.min.z << ")" << std::endl;
+        Bounds b = compute_bounds(points); //calculates the min and max co-ordinates
+        Point3D result = box_dimension(b); //total dimension
+        std::cout << "Box Dimensions: (" << result.x << ", " << result.y << ", " << result.z << ")" << std::endl;
         return 0;
     }
 
