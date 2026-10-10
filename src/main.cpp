@@ -1,4 +1,5 @@
 #include <iostream>
+#include <vector>
 
 struct Point3D {
     double x;
@@ -7,9 +8,17 @@ struct Point3D {
 };
 
 int main() {
-    Point3D p{12.4, 4.2, 103.5};
-    Point3D q{6.7, 6.9, 50.0};
-    std::cout << "Point p: (" << p.x << ", " << p.y << ", " << p.z << ")" << std::endl;
-    std::cout << "Point q: (" << q.x << ", " << q.y << ", " << q.z << ")" << std::endl;
+
+    std::vector<Point3D> points{
+        {12.4, 4.2, 103.5},
+        {6.7, 6.9, 50.0},
+        {10.0, 5.0, 80.0}
+    };
+    points.push_back({1.0, 2.0, 3.0});
+    std::cout << "Number of points: " << points.size() << std::endl;
+
+    for (const Point3D& point: points){
+        std::cout << "(" << point.x << ", " << point.y << ", " << point.z << ")" << std::endl;
+    }
     return 0;
  }
