@@ -11,7 +11,7 @@ bool is_valid_point(const Point3D &point)
            std::isfinite(point.y) &&
            std::isfinite(point.z);
 }
-// accept valid points but don't throw away whole batch
+// accept valid points but don't throw away whole batch returns vector of Point3D
 std::vector<Point3D> filter_valid_points(const std::vector<Point3D> &points)
 {
     std::vector<Point3D> valid;
@@ -74,6 +74,8 @@ Point3D box_dimension(const Bounds &b)
     return {b.max.x - b.min.x, b.max.y - b.min.y, b.max.z - b.min.z};
 }
 // calculate the centroid
+// add all respective co-ordinates and divide by total points
+// retuns Point3D object
 Point3D compute_average(const std::vector<Point3D> &points)
 {
     if (points.empty())
