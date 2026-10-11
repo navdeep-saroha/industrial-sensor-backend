@@ -21,6 +21,22 @@ bool is_valid_point(const Point3D& point){
            std::isfinite(point.y) &&
            std::isfinite(point.z);
 }
+// accept valid points but don't throw away whole batch
+std::vector<Point3D> filter_valid_points(const std::vector<Point3D> &points)
+{
+    std::vector<Point3D> valid;
+    for (const Point3D &point : points)
+    {
+        if (is_valid_point(point))
+        {
+            valid.push_back(point);
+        }
+    }
+    if(valid.empty()){
+        throw std::invalid_argument("no valid points provided");
+    }
+    return valid;
+}
 
 // calculates the min and max co-ordinates
 Bounds compute_bounds(const std::vector<Point3D>& points){
@@ -77,6 +93,8 @@ Point3D compute_average(const std::vector<Point3D>& points){
     return {sum_x/total_points, sum_y/total_points, sum_z/total_points};
 }
 
+
+
 int main() {
 
     try{
@@ -86,27 +104,28 @@ int main() {
             {10.0, 5.0, 80.0}};
         points.push_back({1.0, 2.0, 3.0});
         points.push_back({2.0, 3.0, 4.0});
+        double nan1 = std::numeric_limits<double>::quiet_NaN();
+        points.push_back({nan1, 2.0, 3.0});
         std::cout << "Number of points: " << points.size() << std::endl;
+        std::vector<Point3D> valid_points = filter_valid_points(points);
+        std::size_t rejected = points.size() - valid_points.size();
 
-        for (const Point3D& point : points)
+        std::cout << "Valid points: " << valid_points.size() << std::endl;
+        std::cout << "Rejected points: " << rejected << std::endl;
+
+        Bounds b = compute_bounds(valid_points);
+
+        for (const Point3D& point : valid_points)
         {
             std::cout << "(" << point.x << ", " << point.y << ", " << point.z << ")" << std::endl;
         }
-        Bounds b = compute_bounds(points); //calculates the min and max co-ordinates
         Point3D result = box_dimension(b); //total dimension
-        std::vector<Point3D> empty_points{};
-        Point3D centroid = compute_average(points);
+        Point3D centroid = compute_average(valid_points);
         std::cout << "Box Dimensions: (" << result.x << ", " << result.y << ", " << result.z << ")" << std::endl;
         std::cout << "Centroid: (" << centroid.x << ", " << centroid.y << ", " << centroid.z << ")" << std::endl;
 
 
-        const double nan_value = std::numeric_limits<double>::quiet_NaN();
-        const double inf_value = std::numeric_limits<double>::infinity();
-        std::cout << std::boolalpha;
-        std::cout << "Normal point:   " << is_valid_point({1.0, 2.0, 3.0}) << std::endl;
-        std::cout << "NaN in y:       " << is_valid_point({1.0, nan_value, 3.0}) << std::endl;
-        std::cout << "Infinity in z:  " << is_valid_point({1.0, 2.0, inf_value}) << std::endl;
-        std::cout << "Negative point: " << is_valid_point({-5.0, -2.0, -1.0}) << std::endl;
+
         return 0;
     }
 
