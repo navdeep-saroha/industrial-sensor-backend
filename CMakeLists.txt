@@ -6,7 +6,7 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_EXTENSIONS OFF)
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
-add_library(point_processing src/point_processing.cpp)
+add_library(point_processing src/point_processing.cpp src/message_parser.cpp)
 target_include_directories(point_processing PUBLIC src)
 target_compile_options(point_processing PRIVATE -Wall -Wextra -Wpedantic)
 
@@ -25,7 +25,9 @@ FetchContent_MakeAvailable(googletest)
 
 enable_testing()
 
-add_executable(point_processing_tests tests/point_processing_tests.cpp)
+add_executable( point_processing_tests 
+                tests/point_processing_tests.cpp
+                tests/message_parser_tests.cpp)
 target_link_libraries(point_processing_tests PRIVATE point_processing GTest::gtest_main)
 target_compile_options(point_processing_tests PRIVATE -Wall -Wextra -Wpedantic)
 
