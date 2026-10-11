@@ -5,5 +5,5 @@ set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_EXTENSIONS OFF)
 
-add_executable(sensor_backend src/main.cpp)
+add_executable(sensor_backend src/main.cpp src/point_processing.cpp)
 target_compile_options(sensor_backend PRIVATE -Wall -Wextra -Wpedantic)
