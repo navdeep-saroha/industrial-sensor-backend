@@ -33,3 +33,6 @@ target_compile_options(point_processing_tests PRIVATE -Wall -Wextra -Wpedantic)
 
 include(GoogleTest)
 gtest_discover_tests(point_processing_tests)
+
+add_executable(tcp_server src/server_main.cpp)
+target_compile_options(tcp_server PRIVATE -Wall -Wextra -Wpedantic)
