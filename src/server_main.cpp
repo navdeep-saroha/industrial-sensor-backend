@@ -15,7 +15,7 @@ int main() {
         return 1;
     }
 
-    // Let us restart the server right away without "Address already in use"
+    //restart the server right away without "Address already in use"
     int opt = 1;
     setsockopt(server_fd, SOL_SOCKET, SO_REUSEADDR, &opt, sizeof(opt));
 

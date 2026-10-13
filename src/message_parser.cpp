@@ -39,3 +39,15 @@ Point3D parse_point(const std::string& line){
 
     return {parse_double(parts[0]), parse_double(parts[1]), parse_double(parts[2])};
 }
+
+std::vector<std::string> extract_line(std::string& buffer){
+    std::vector<std::string> lines;
+    std::size_t newline_pos = buffer.find("\n");
+
+    while(newline_pos!=std::string::npos){
+        lines.push_back(buffer.substr(0,newline_pos));
+        buffer.erase(0, newline_pos+1);
+        newline_pos = buffer.find("\n");
+    }
+    return lines;
+}
